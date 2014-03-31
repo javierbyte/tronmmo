@@ -43,6 +43,7 @@ function createTron(name, id) {
 	}
 
 	a[this.x][this.y] = id;
+	changes(this.x, this.y, id);
 }
 
 function newTron(name) {
@@ -58,13 +59,22 @@ function update() {
 
 		if(tron[x].x>=0 && tron[x].x<arenaW && tron[x].y>=0 && tron[x].y<arenaH && a[tron[x].x][tron[x].y] == -1) {
 			a[tron[x].x][tron[x].y] = x;
+			changes(tron[x].x, tron[x].y, x);
 		} else {
 			for(i=0;i<arenaW;i++) for(j=0;j<arenaH;j++) if(a[i][j] == x) {
 				a[i][j] = -1;
+				changes(i, j, -1);
 			}
 			tron[x] = new createTron(tron[x].name, tron[x].id); //reviving!
 		}
 	}
+}
+
+//this functions stores *only* the changes on the matrix
+//the changes were pushed on the update stage
+var lechanges = []
+function changes(i,j,v) {
+	lechanges.push([i,j,v]);
 }
 
 io.sockets.on('connection', function (socket) {
@@ -82,11 +92,13 @@ io.sockets.on('connection', function (socket) {
     	socket.get('tronNumber', function (err, tronNumber) {
       		socket.emit('msj', 'move ' + move + ' by ' + tronNumber);
       		tron[tronNumber].dir = move;
+      		socket.emit('start',a,color);
     	});
   	});
 
 	setInterval(function() {
+		socket.emit('update', lechanges);
+		lechanges = [];
 		update();
-		socket.emit('update', a);
 	}, 120);
 });

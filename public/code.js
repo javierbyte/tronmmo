@@ -30,8 +30,10 @@ socket.on('start', function (sA, sColor) {
 });
 
 
-socket.on('update', function (data) {
-	a = data;
+socket.on('update', function (lechanges) {
+	for(x=0;x<lechanges.length;x++) {
+		a[lechanges[x][0]][lechanges[x][1]] = lechanges[x][2];
+	}
 });
 
 /*view*/
