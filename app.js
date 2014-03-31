@@ -26,6 +26,7 @@ for(x=0;x<arenaW;x++) {
 
 //this functions stores *only* the changes on the matrix
 //the changes were pushed on the update stage
+
 var lechanges = []
 function changes(i,j,v) {
 	lechanges.push([i,j,v]);
@@ -96,8 +97,8 @@ io.sockets.on('connection', function (socket) {
   	});
 
 	setInterval(function() {
-		socket.emit('update', lechanges);
-		lechanges = [];
 		update();
+		io.sockets.emit('update', lechanges);
+		lechanges = [];
 	}, 120);
 });

@@ -8,7 +8,6 @@ socket.on('handshake', function (data) {
 
 socket.on('msj', function (data){
 	console.log(data);
-	connected = 1;
 });
 
 /*caching jquery*/
@@ -29,15 +28,13 @@ for(x=0;x<arenaW;x++) {
 socket.on('start', function (sA, sColor) {
 	a = sA;
 	color = sColor;
+	connected = 1;
 });
 
-
-var updates;
 socket.on('update', function (lechanges) {
 	for(x=0;x<lechanges.length;x++) {
 		a[lechanges[x][0]][lechanges[x][1]] = lechanges[x][2];
 	}
-	updates = lechanges;
 });
 
 /*view*/
