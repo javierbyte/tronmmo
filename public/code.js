@@ -1,6 +1,6 @@
 var socket = io.connect(document.URL);
 
-socket.on('start', function (data) {
+socket.on('handshake', function (data) {
 	console.log('starting tron ');
 	socket.emit('newTron', 'dummy');
 });
@@ -13,8 +13,8 @@ socket.on('msj', function (data){
 var $main = $('#main');
 
 /*model*/
-var arenaW = 140; //the width of the arena
-var arenaH = 80; //the height of the arena
+var arenaW = 120; //the width of the arena
+var arenaH = 70; //the height of the arena
 
 var a = []; // initializing the arena matrix
 for(x=0;x<arenaW;x++) {
@@ -24,20 +24,21 @@ for(x=0;x<arenaW;x++) {
 	}
 }
 
-socket.on('update', function (data) {
-	a = data;
+socket.on('start', function (sA, sColor) {
+	a = sA;
+	color = sColor;
 });
 
-var tron = [];
-socket.on('updateTron', function (data) {
-	tron = data;
+
+socket.on('update', function (data) {
+	a = data;
 });
 
 /*view*/
 function render() {
 	for(x=0;x<arenaW;x++) for(y=0;y<arenaH;y++) {
 		if(a[x][y] != -1) {
-			ctx.fillStyle = tron[a[x][y]].color;
+			ctx.fillStyle = color[a[x][y]];
 			ctx.fillRect(x,y,1,1);
 		} else {
 			ctx.clearRect(x,y,1,1);

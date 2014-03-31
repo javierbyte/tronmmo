@@ -13,8 +13,8 @@ app.get('/', function (req, res) {
 app.use(express.static(__dirname + '/public'));
 
 /* GAME logic */
-var arenaW = 140; //the width of the arena
-var arenaH = 80; //the height of the arena
+var arenaW = 120; //the width of the arena
+var arenaH = 70; //the height of the arena
 
 var a = []; // initializing the arena matrix
 for(x=0;x<arenaW;x++) {
@@ -24,13 +24,17 @@ for(x=0;x<arenaW;x++) {
 	}
 }
 
+var color = [];
+for(x=0;x<50;x++) {
+	color[x] = "#"+((1<<24)*Math.random()|0).toString(16);
+}
+
 var tron = [];
 function createTron(name, id) {
 	this.name = name;
 	this.id = id;
 	this.x = (Math.random()*arenaW)|0;
 	this.y = (Math.random()*arenaH)|0;
-	this.color = "#"+((1<<24)*Math.random()|0).toString(16);
 	this.dir = 1+(Math.random()*4)|0;
 
 	while(a[this.x][this.y] != -1) {
@@ -64,11 +68,12 @@ function update() {
 }
 
 io.sockets.on('connection', function (socket) {
-	socket.emit('start');
+	socket.emit('handshake');
 
 	socket.on('newTron', function (data) {
     	socket.set('tronNumber', tron.length, function () {
       		socket.emit('msj', 'Welcome, ' + tron.length);
+      		socket.emit('start', a, color)
     	});
     	newTron(data);
 	});
@@ -83,6 +88,5 @@ io.sockets.on('connection', function (socket) {
 	setInterval(function() {
 		update();
 		socket.emit('update', a);
-		socket.emit('updateTron', tron);
-	}, 80);
+	}, 120);
 });
