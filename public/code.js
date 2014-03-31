@@ -1,4 +1,5 @@
 var socket = io.connect(document.URL);
+var connected = 0;
 
 socket.on('handshake', function (data) {
 	console.log('starting tron ');
@@ -7,6 +8,7 @@ socket.on('handshake', function (data) {
 
 socket.on('msj', function (data){
 	console.log(data);
+	connected = 1;
 });
 
 /*caching jquery*/
@@ -30,10 +32,12 @@ socket.on('start', function (sA, sColor) {
 });
 
 
+var updates;
 socket.on('update', function (lechanges) {
 	for(x=0;x<lechanges.length;x++) {
 		a[lechanges[x][0]][lechanges[x][1]] = lechanges[x][2];
 	}
+	updates = lechanges;
 });
 
 /*view*/
@@ -68,11 +72,13 @@ var ctx = c.getContext("2d");
 ctx.scale(ratio, ratio);
 
 /* 3,2,1.. go!*/
-setInterval(render, 1);
+setInterval(render, 16);
 
 $(document).keydown(function(e) {
-    if(e.keyCode == 38) socket.emit('move', 1);
-    else if(e.keyCode == 39) socket.emit('move', 2);
-    else if(e.keyCode == 40) socket.emit('move', 3);
-    else if(e.keyCode == 37) socket.emit('move', 4);
+	if(connected) {
+		if(e.keyCode == 38) socket.emit('move', 1);
+		else if(e.keyCode == 39) socket.emit('move', 2);
+		else if(e.keyCode == 40) socket.emit('move', 3);
+		else if(e.keyCode == 37) socket.emit('move', 4);
+	}
 });

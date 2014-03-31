@@ -24,6 +24,14 @@ for(x=0;x<arenaW;x++) {
 	}
 }
 
+//this functions stores *only* the changes on the matrix
+//the changes were pushed on the update stage
+var lechanges = []
+function changes(i,j,v) {
+	lechanges.push([i,j,v]);
+}
+
+
 var color = [];
 for(x=0;x<50;x++) {
 	color[x] = "#"+((1<<24)*Math.random()|0).toString(16);
@@ -70,29 +78,20 @@ function update() {
 	}
 }
 
-//this functions stores *only* the changes on the matrix
-//the changes were pushed on the update stage
-var lechanges = []
-function changes(i,j,v) {
-	lechanges.push([i,j,v]);
-}
-
 io.sockets.on('connection', function (socket) {
 	socket.emit('handshake');
 
 	socket.on('newTron', function (data) {
     	socket.set('tronNumber', tron.length, function () {
       		socket.emit('msj', 'Welcome, ' + tron.length);
-      		socket.emit('start', a, color)
     	});
     	newTron(data);
+    	socket.emit('start',a,color);
 	});
 
   	socket.on('move', function (move) {
     	socket.get('tronNumber', function (err, tronNumber) {
-      		socket.emit('msj', 'move ' + move + ' by ' + tronNumber);
       		tron[tronNumber].dir = move;
-      		socket.emit('start',a,color);
     	});
   	});
 
