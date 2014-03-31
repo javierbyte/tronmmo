@@ -7,15 +7,17 @@
 
 	<style>
 		*{margin:0;padding: 0;}
-
 		body{background: #222;}
-
 		canvas{background: #000}
+
+		.loading{position: absolute;z-index: 10;line-height: 1em;width: 40em;top: 50%;left: 50%;margin:-.5em 0 0 -20em;color:#fff;text-align: center;font-size: 2em;font-family: sans-serif;}
 	</style>
 </head>
 
 <body id="body">
 	<canvas id="main" width="320" height="240"></canvas>
+
+	<div class="loading">Cargando...</div>
 
 	<script src="jquery-2.1.0.min.js"></script>
 	<script src="code.js"></script>

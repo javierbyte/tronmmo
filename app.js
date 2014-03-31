@@ -60,7 +60,7 @@ function newTron(name) {
 }
 
 function update() {
-	for(x=0;x<tron.length;x++) {
+	for(x=0;x<tron.length;x++) if(tron[x]) {
 		if(tron[x].dir == 1) tron[x].y = tron[x].y - 1;
 		else if(tron[x].dir == 2) tron[x].x = tron[x].x + 1;
 		else if(tron[x].dir == 3) tron[x].y = tron[x].y + 1;
@@ -96,9 +96,19 @@ io.sockets.on('connection', function (socket) {
     	});
   	});
 
+  socket.on('disconnect', function () {
+    socket.get('tronNumber', function (err, tronNumber) {
+		for(i=0;i<arenaW;i++) for(j=0;j<arenaH;j++) if(a[i][j] == tronNumber) {
+			a[i][j] = -1;
+			changes(i, j, -1);
+		}
+    	delete tron[tronNumber];
+    });
+  });
+
+});
 	setInterval(function() {
 		update();
 		io.sockets.emit('update', lechanges);
 		lechanges = [];
-	}, 120);
-});
+	}, 150);

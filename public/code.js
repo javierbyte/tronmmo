@@ -29,6 +29,7 @@ socket.on('start', function (sA, sColor) {
 	a = sA;
 	color = sColor;
 	connected = 1;
+	$('.loading').css('display', 'none');
 });
 
 socket.on('update', function (lechanges) {
@@ -41,7 +42,7 @@ socket.on('update', function (lechanges) {
 function render() {
 	for(x=0;x<arenaW;x++) for(y=0;y<arenaH;y++) {
 		if(a[x][y] != -1) {
-			ctx.fillStyle = color[a[x][y]];
+			ctx.fillStyle = (color[(a[x][y]%50)]);
 			ctx.fillRect(x,y,1,1);
 		} else {
 			ctx.clearRect(x,y,1,1);
