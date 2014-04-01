@@ -10,7 +10,7 @@ socket.on('msj', function (data){
 	console.log(data);
 });
 
-/*caching jquery*/
+/*caching jquery */
 var $main = $('#main');
 
 /*model*/
